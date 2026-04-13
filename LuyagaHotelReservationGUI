@@ -1,0 +1,97 @@
+package gui;
+import javax.swing.*;
+
+public class LuyagaHotelReservation {
+	static int[][] hotel  = new int[7][5];
+
+	public static void main(String[] args) {	
+		
+			int choice = 0;
+			
+			 do {
+		        int menu = Integer.parseInt(JOptionPane.showInputDialog("Hotel Reservation System\n"  
+		            + "1. Check-in\n"
+		            + "2. Check-out\n"
+		            + "3. Display Status\n"
+		            + "4. Exit\n"));
+		        
+		        try {
+		        	choice = menu;
+		        } catch (NumberFormatException e) {
+		        	JOptionPane.showMessageDialog(null, "Invalid Input. Please Enter: ");
+		        	continue;
+		        }
+		            		           
+		            switch (choice) {
+		                case 1:
+		                    checkIn();
+		                    break;
+		                case 2:
+		                    checkOut();
+		                    break;
+		                case 3:
+		                    displayStatus();
+		                    break;
+		                case 4:
+		                	JOptionPane.showMessageDialog(null, "Exit.");		                	
+		                	break;
+		               
+		            }
+
+		        } while (choice != 4);
+
+		     
+		    }
+		
+		public static void checkIn() {
+			 int floor = Integer.parseInt(JOptionPane.showInputDialog("Enter floor (1-7): "));
+			 int room = Integer.parseInt(JOptionPane.showInputDialog("Enter room (1-7): "));
+		     		        
+		        if(floor < 1 || floor > 7 || room < 1 || room > 5) {
+		        	JOptionPane.showMessageDialog(null, "Invalid floor or room.");	
+		        }
+		        
+		        if(hotel[floor - 1][room - 1] == 0) {
+		          hotel[floor - 1][room - 1] = 1;
+		          JOptionPane.showMessageDialog(null, "Check-in Successful.\n");	  
+		        }else {
+		        	System.out.println("Already occupied.\n");	  	
+		        }
+		    }
+		
+		public static void checkOut() {
+			 int floor = Integer.parseInt(JOptionPane.showInputDialog("Enter floor (1-7): "));
+			 int room = Integer.parseInt(JOptionPane.showInputDialog("Enter room (1-7): "));
+		        
+		        if(floor < 1 || floor > 7 || room < 1 || room > 5) {
+		        	JOptionPane.showMessageDialog(null, "Invalid floor or room.\n");	
+		        }
+		        
+		        if(hotel[floor - 1][room - 1] == 1) {
+		          hotel[floor - 1][room - 1] = 0;
+		          JOptionPane.showMessageDialog(null, "Check-out Successful.\n");	  
+		        }else {
+		        	System.out.println("Already empty.\n");	  	
+		        }
+		    }
+		
+		public static void displayStatus() {
+			StringBuilder floor = new StringBuilder();
+			floor.append("Room Status (0 = Available, 1 = Occupied)\n");
+          
+		    for (int i = 6; i >= 0; i--) { 
+		    	floor.append("Floor ").append(i + 1).append(": ");
+
+		        for (int j = 0; j < 5; j++) {
+		        	floor.append("[" + hotel[i][j] + "]");
+		        }
+
+		        floor.append("\n");
+		    }
+		    JOptionPane.showMessageDialog(null, floor.toString());
+		  
+		    }
+	}
+
+
+
