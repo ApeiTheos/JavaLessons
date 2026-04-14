@@ -1,0 +1,127 @@
+package gui;
+import javax.swing.*;
+import java.io.*;
+public class StudentFeedbackRecordLuyaga {
+public static void main(String[] args) {
+int totalFeedbacks = 0; int sumRatings = 0;
+int excellent = 0; int good = 0; int average = 0;
+int poor = 0; int veryPoor = 0;
+StringBuilder fileContent = new StringBuilder();
+fileContent.append("--- Student Feedback Records ---\n\n");
+int continueInput;
+do {
+String name = JOptionPane.showInputDialog("Enter Student Name:");
+String course = JOptionPane.showInputDialog("Enter Course/Subject:");
+String feedback = JOptionPane.showInputDialog("Enter Feedback Message:");
+int rating = 0;
+while (true) {
+try {
+rating = Integer.parseInt(
+JOptionPane.showInputDialog("Enter Rating (1-5):")
+);
+if (rating >= 1 && rating <= 5) {
+break;
+} else {
+JOptionPane.showMessageDialog(null,
+"Rating must be between 1 and 5.");
+}
+} catch (NumberFormatException e) {
+JOptionPane.showMessageDialog(null,
+"Invalid input! Enter numbers only.");
+}
+}
+totalFeedbacks++;
+sumRatings += rating;
+String ratingText = "";
+switch (rating) {
+case 5:
+excellent++;
+ratingText = "Excellent";
+break;
+case 4:
+good++;
+ratingText = "Good";
+break;
+case 3:
+average++;
+ratingText = "Average";
+break;
+case 2:
+poor++;
+ratingText = "Poor";
+break;
+case 1:
+veryPoor++;
+ratingText = "Very Poor";
+break;
+}
+fileContent.append("Student Name: ").append(name).append("\n");
+fileContent.append("Course: ").append(course).append("\n");
+fileContent.append("Feedback: ").append(feedback).append("\n");
+fileContent.append("Rating: ").append(rating)
+.append(" (").append(ratingText).append(")\n\n");
+continueInput = JOptionPane.showConfirmDialog(
+null,
+"Do you want to enter another feedback?",
+"Continue?",
+
+JOptionPane.YES_NO_OPTION
+);
+} while (continueInput == JOptionPane.YES_OPTION);
+double averageRating = 0;
+if (totalFeedbacks > 0) {
+averageRating = (double) sumRatings / totalFeedbacks;
+}
+String feedbackMessage;
+if (averageRating >= 4.5) {
+feedbackMessage = "Outstanding Feedback!";
+} else if (averageRating >= 3.5) {
+feedbackMessage = "Good Feedback!";
+} else if (averageRating >= 2.5) {
+feedbackMessage = "Average Feedback";
+} else {
+feedbackMessage = "Needs Improvement";
+}
+fileContent.append("Total Feedbacks: ")
+.append(totalFeedbacks).append("\n");
+fileContent.append("Average Rating: ")
+.append(String.format("%.1f", averageRating))
+.append("\n\n");
+fileContent.append("Rating Summary:\n");
+fileContent.append("Excellent: ").append(excellent).append("\n");
+fileContent.append("Good: ").append(good).append("\n");
+fileContent.append("Average: ").append(average).append("\n");
+fileContent.append("Poor: ").append(poor).append("\n");
+fileContent.append("Very Poor: ").append(veryPoor).append("\n");
+JOptionPane.showMessageDialog(
+null,
+"Total Feedbacks: " + totalFeedbacks +
+"\nAverage Rating: " + String.format("%.1f", averageRating) +
+"\n\nRating Summary:" +
+"\nExcellent: " + excellent +
+"\nGood: " + good +
+"\nAverage: " + average +
+"\nPoor: " + poor +
+"\nVery Poor: " + veryPoor +
+"\n\n" + feedbackMessage
+);
+try {
+BufferedWriter writer =
+new BufferedWriter(
+new FileWriter("feedback.txt", true)
+);
+writer.write(fileContent.toString());
+writer.newLine();
+writer.close();
+JOptionPane.showMessageDialog(
+null,
+"Feedback saved successfully to feedback.txt #"
+);
+} catch (IOException e) {
+JOptionPane.showMessageDialog(
+null,
+"Error saving file: " + e.getMessage()
+);
+}
+}
+}
