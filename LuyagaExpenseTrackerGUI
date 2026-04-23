@@ -1,0 +1,108 @@
+package luyaga_569833;
+
+import javax.swing.*;
+import java.io.*;
+import java.awt.*;
+
+public class LuyagaExpenseTracker extends JFrame {
+    
+	static JTextField receiptNum, txtname, txtCost, txtTotal, txtTax;
+	
+	LuyagaExpenseTracker(){
+		
+
+		JLabel title = new JLabel("EXPENSE TRACKER ");
+		add(title).setBounds(130, 30, 150, 10);
+		
+		JLabel receiptNo = new JLabel("Receipt Number: ");
+		add(receiptNo).setBounds(30, 70, 100, 15);
+		
+		receiptNum = new JTextField();
+		add(receiptNum).setBounds(130, 70, 200, 20);
+		
+		JLabel lblName = new JLabel("Store Name: ");
+		add(lblName).setBounds(30, 100, 100, 25);
+		
+		txtname = new JTextField();
+		add(txtname).setBounds(130, 100, 200, 20);
+		
+		JLabel lblcost = new JLabel("Total Cost: ");
+		add(lblcost).setBounds(30, 130, 175, 25);
+		
+		txtCost = new JTextField();
+		add(txtCost).setBounds(130, 130, 200, 20);
+		
+		JLabel lbltax = new JLabel("Tax(12%): ");
+		add(lbltax).setBounds(30, 175, 175, 25);
+		
+		txtTax = new JTextField();
+		add(txtTax).setBounds(130, 175, 200, 20);
+		txtTax.setEditable(false);
+		
+		JLabel lbltotal = new JLabel("Final Amount: ");
+		add(lbltotal).setBounds(30, 200, 175, 25);
+		
+		txtTotal = new JTextField();
+		add(txtTotal).setBounds(130, 200, 200, 20);
+		txtTotal.setEditable(false);
+		
+		JButton record = new JButton("Record");
+		add(record).setBounds(70, 240, 105, 30);
+		
+		
+		record.addActionListener(e -> {
+				try {
+					FileWriter fw = new FileWriter("data.txt", true);
+					
+					int recNum = Integer.parseInt(receiptNum.getText());
+					String name = txtname.getText();
+					double total = Double.parseDouble(txtCost.getText());
+					
+					double taxes = total * 0.12;
+					double finalAm = total + taxes;
+					
+					txtTax.setText(String.valueOf(taxes));
+					txtTotal.setText(String.valueOf(finalAm));
+					
+					fw.write(recNum + " - " + name + " - " +  total + " - " + taxes + " - " + finalAm + "\n"); 
+					fw.close();
+					
+					JOptionPane.showMessageDialog(null, "Saved Successfully"); 
+					
+					
+				} catch (IOException e1) {
+					System.err.println("System Error: " + e1);
+				
+				}
+				
+		});
+		
+		
+		JButton clear = new JButton("Clear");
+		add(clear).setBounds(205, 240, 105, 30);
+		
+		clear.addActionListener(e -> {
+			receiptNum.setText("");
+			txtname.setText("");
+			txtCost.setText("");
+			txtTotal.setText("");
+			txtTax.setText("");
+
+		});
+		
+		
+		setTitle("EXPENSE TRACKER");
+		setLayout(null);
+		setSize(900, 500);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(true);
+		
+		
+	}
+	
+	public static void main(String[] args) {
+		new LuyagaExpenseTracker();
+
+	}
+
+}
