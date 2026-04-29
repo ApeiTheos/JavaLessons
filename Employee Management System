@@ -1,11 +1,18 @@
 package guiTrial;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.io.*;
 
 
 public class LuyagaEmployee1 extends JFrame{
 
 	static JTextField employeeID, name, age, dBirth, nationality, cNumber, email, dep, jobT;
+	static JRadioButton rbMale, rbFemale;
+	static String gender;
+	static DefaultTableModel model;
+	
+	static String[] status = {"Single", "Married", "Widowed", "Separated", "Divorced"};
 	
 	 LuyagaEmployee1(){
 		 
@@ -34,9 +41,6 @@ public class LuyagaEmployee1 extends JFrame{
 		 
 		 JLabel cStatus = new JLabel("Civil Status: ");
 		 add(cStatus).setBounds(220, 110, 100, 20);;
-
-		 String[] status = {"Single", "Married", "Widowed", "Separated", "Divorced"};
-		 
 		 JComboBox<String> CivilStatus = new JComboBox<>(status);
 		 add(CivilStatus).setBounds(220, 130, 160, 20);
 		 
@@ -47,9 +51,9 @@ public class LuyagaEmployee1 extends JFrame{
 		 
 		 JLabel lblGender = new JLabel("Gender:");
 		 add(lblGender).setBounds(410, 60, 100, 20);
-		 JRadioButton rbMale = new JRadioButton("Male");
+		 rbMale = new JRadioButton("Male");
 		 add(rbMale).setBounds(410, 80, 70, 20);
-		 JRadioButton rbFemale = new JRadioButton("Female");
+		 rbFemale = new JRadioButton("Female");
 		 add(rbFemale).setBounds(480, 80, 80, 20);
 		 
 		 ButtonGroup genderGroup = new ButtonGroup();
@@ -75,9 +79,54 @@ public class LuyagaEmployee1 extends JFrame{
 		 jobT = new JTextField();
 		 add(jobT).setBounds(600, 180, 160, 20);
 		 
+		 JButton addEmp = new JButton("Add Employee");
+		 add(addEmp).setBounds(620, 210, 120, 20);
 		 
+		 String columns[] = {"Employee ID", "Full Name", "Birth", " Age", "Civil Status", 
+				 "Nationality", "Gender", "Contact Number", "Email", "Department", "Job Title / Position" };
+		 model = new DefaultTableModel(columns, 0);
+		 JTable table = new JTable(model);
+		 JScrollPane scPane = new JScrollPane(table);
+		 add(scPane).setBounds(30, 250, 730, 250);
 		 
+		 read();
 		 
+		 addEmp.addActionListener(e ->{
+			 
+			    String empID = employeeID.getText();
+			    String fullName = name.getText();
+			    String birthday = dBirth.getText();
+			    String empAge = age.getText();
+			    String nat = nationality.getText();
+			    String contact = cNumber.getText();
+			    String mail = email.getText();
+			    String department1 = dep.getText();
+			    String job = jobT.getText();
+			    
+			    String civilStatus = CivilStatus.getSelectedItem().toString();
+			 
+			    if (rbMale.isSelected()) {
+			        gender = "Male";
+			    } else if (rbFemale.isSelected()) {
+			        gender = "Female";
+			    }
+
+			    
+			 try {
+					FileWriter fw = new FileWriter("employee.txt", true);
+					
+					fw.write(empID + " - " + fullName + " - " +  birthday + " - " + empAge + " - " + 
+					civilStatus + " - " + nat + " - " + gender + " - " + contact + " - " +  mail + 
+							" - " + department1 + " - " + job + "\n"); 
+					fw.close();
+					
+					read();
+					JOptionPane.showMessageDialog(null, "Employee Added Successfully!"); 
+					
+			 } catch (IOException e1) {
+				 System.out.println("System Error: " + e1.getMessage());
+			 }
+		 });
 		 
 		 setTitle("EMPLOYEE MANAGEMENT SYSTEM");
 		 setLayout(null);
@@ -85,6 +134,21 @@ public class LuyagaEmployee1 extends JFrame{
 		 setDefaultCloseOperation(EXIT_ON_CLOSE);
 		 setVisible(true);
 	 }
+	 
+	 public static void read() {
+			model.setRowCount(0);
+			
+			try (BufferedReader br = new BufferedReader(new FileReader("employee.txt"))) {
+			String line;
+			
+			while((line = br.readLine()) != null) {
+				String row[] = line.split(" - ");
+				model.addRow(row);
+			}
+			} catch(IOException e) {
+				System.out.println("System Error: " + e.getMessage());
+			}
+		}
 	
 	public static void main(String[] args) {
 	new LuyagaEmployee1();
