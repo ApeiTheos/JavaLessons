@@ -1,0 +1,93 @@
+package guiTrial;
+import javax.swing.*;
+import java.io.*;
+
+
+public class LuyagaEmployee1 extends JFrame{
+
+	static JTextField employeeID, name, age, dBirth, nationality, cNumber, email, dep, jobT;
+	
+	 LuyagaEmployee1(){
+		 
+		 JLabel title = new JLabel("EMC Inc.");
+		 add(title).setBounds(30, 20, 100, 20);
+		 
+		 JLabel emID = new JLabel("Employee ID: ");
+		 add(emID).setBounds(30, 60, 100, 20);
+		 employeeID = new JTextField();
+		 add(employeeID).setBounds(30, 80, 160, 20);
+		 
+		 JLabel fname = new JLabel("Full Name: ");
+		 add(fname).setBounds(30, 110, 100, 20);
+		 name = new JTextField();
+		 add(name).setBounds(30, 130, 160, 20);
+		 
+		 JLabel dob = new JLabel("Date of Birth: ");
+		 add(dob).setBounds(30, 160, 120, 20);
+		 dBirth = new JTextField();
+		 add(dBirth).setBounds(30, 180, 160, 20);
+		 
+		 JLabel age1 = new JLabel("Age: ");
+		 add(age1).setBounds(220, 60, 100, 20);
+		 age = new JTextField();
+		 add(age).setBounds(220, 80, 160, 20);
+		 
+		 JLabel cStatus = new JLabel("Civil Status: ");
+		 add(cStatus).setBounds(220, 110, 100, 20);;
+
+		 String[] status = {"Single", "Married", "Widowed", "Separated", "Divorced"};
+		 
+		 JComboBox<String> CivilStatus = new JComboBox<>(status);
+		 add(CivilStatus).setBounds(220, 130, 160, 20);
+		 
+		 JLabel national = new JLabel("Nationality: ");
+		 add(national).setBounds(220, 160, 100, 20);
+		 nationality = new JTextField();
+		 add(nationality).setBounds(220, 180, 160, 20);
+		 
+		 JLabel lblGender = new JLabel("Gender:");
+		 add(lblGender).setBounds(410, 60, 100, 20);
+		 JRadioButton rbMale = new JRadioButton("Male");
+		 add(rbMale).setBounds(410, 80, 70, 20);
+		 JRadioButton rbFemale = new JRadioButton("Female");
+		 add(rbFemale).setBounds(480, 80, 80, 20);
+		 
+		 ButtonGroup genderGroup = new ButtonGroup();
+		 genderGroup.add(rbMale); genderGroup.add(rbFemale);
+
+		 JLabel contactNum = new JLabel("Contact Number: ");
+		 add(contactNum).setBounds(410, 110, 120, 20);
+		 cNumber = new JTextField();
+		 add(cNumber).setBounds(410, 130, 160, 20);
+		 
+		 JLabel myEmail = new JLabel("Email: ");
+		 add(myEmail).setBounds(410, 160, 100, 20);
+		 email = new JTextField();
+		 add(email).setBounds(410, 180, 160, 20);
+		 
+		 JLabel department = new JLabel("Department: ");
+		 add(department).setBounds(600, 110, 100, 20);
+		 dep = new JTextField();
+		 add(dep).setBounds(600, 130, 160, 20);
+		 
+		 JLabel jobTitle = new JLabel("Job Title / Position: ");
+		 add(jobTitle).setBounds(600, 160, 150, 20);
+		 jobT = new JTextField();
+		 add(jobT).setBounds(600, 180, 160, 20);
+		 
+		 
+		 
+		 
+		 
+		 setTitle("EMPLOYEE MANAGEMENT SYSTEM");
+		 setLayout(null);
+		 setSize(800, 500);
+		 setDefaultCloseOperation(EXIT_ON_CLOSE);
+		 setVisible(true);
+	 }
+	
+	public static void main(String[] args) {
+	new LuyagaEmployee1();
+	}
+
+}
