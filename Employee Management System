@@ -1,15 +1,17 @@
 package guiTrial;
 import javax.swing.*;
+
 import javax.swing.table.DefaultTableModel;
-
+import java.awt.*;
+import java.util.*;
 import java.io.*;
-
+import java.awt.event.*;
 
 public class LuyagaEmployee1 extends JFrame{
 
 	static JTextField employeeID, name, age, dBirth, nationality, cNumber, email, dep, jobT;
 	static JRadioButton rbMale, rbFemale;
-	static String gender;
+	static String gender, civilStatus, update;
 	static DefaultTableModel model;
 	
 	static String[] status = {"Single", "Married", "Widowed", "Separated", "Divorced"};
@@ -80,7 +82,14 @@ public class LuyagaEmployee1 extends JFrame{
 		 add(jobT).setBounds(600, 180, 160, 20);
 		 
 		 JButton addEmp = new JButton("Add Employee");
-		 add(addEmp).setBounds(620, 210, 120, 20);
+		 add(addEmp).setBounds(240, 210, 120, 20);
+		 
+		 JButton updEmp = new JButton("Update Employee");
+		 add(updEmp).setBounds(420, 210, 140, 20);
+		 
+		 JButton delEmp = new JButton("Delete Employee");
+		 add(delEmp).setBounds(615, 210, 130, 20);
+		 
 		 
 		 String columns[] = {"Employee ID", "Full Name", "Birth", " Age", "Civil Status", 
 				 "Nationality", "Gender", "Contact Number", "Email", "Department", "Job Title / Position" };
@@ -89,7 +98,36 @@ public class LuyagaEmployee1 extends JFrame{
 		 JScrollPane scPane = new JScrollPane(table);
 		 add(scPane).setBounds(30, 250, 730, 250);
 		 
+		 table.getTableHeader().setBackground(new Color(173, 216, 230)); 
+		 table.getTableHeader().setForeground(Color.BLACK);
+		 
 		 read();
+		 
+		 table.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent ev) {
+			 int row = table.getSelectedRow();
+			 if(row != -1) {
+				 employeeID.setText(model.getValueAt(row, 0).toString()); 
+				 name.setText(model.getValueAt(row, 1).toString()); 
+				 dBirth.setText(model.getValueAt(row, 2).toString()); 
+				 age.setText(model.getValueAt(row, 3).toString()); 
+				 CivilStatus.setSelectedItem(model.getValueAt(row, 4).toString());
+				 nationality.setText(model.getValueAt(row, 5).toString());
+				 gender = model.getValueAt(row, 6).toString();
+
+				 if(gender.equalsIgnoreCase("Male")) {
+				     rbMale.setSelected(true);
+				 } else if(gender.equalsIgnoreCase("Female")) {
+				     rbFemale.setSelected(true);
+				 }
+				 
+				 cNumber.setText(model.getValueAt(row, 7).toString());
+				 email.setText(model.getValueAt(row, 8).toString());
+				 dep.setText(model.getValueAt(row, 9).toString());
+				 jobT.setText(model.getValueAt(row, 10).toString());
+			 }
+			}
+		 }); 
 		 
 		 addEmp.addActionListener(e ->{
 			 
@@ -102,15 +140,13 @@ public class LuyagaEmployee1 extends JFrame{
 			    String mail = email.getText();
 			    String department1 = dep.getText();
 			    String job = jobT.getText();
+			    civilStatus = CivilStatus.getSelectedItem().toString();
 			    
-			    String civilStatus = CivilStatus.getSelectedItem().toString();
-			 
 			    if (rbMale.isSelected()) {
 			        gender = "Male";
 			    } else if (rbFemale.isSelected()) {
 			        gender = "Female";
 			    }
-
 			    
 			 try {
 					FileWriter fw = new FileWriter("employee.txt", true);
@@ -128,6 +164,96 @@ public class LuyagaEmployee1 extends JFrame{
 			 }
 		 });
 		 
+		 updEmp.addActionListener(e ->{
+			 int selectRow = table.getSelectedRow();
+				
+				if(selectRow == -1) {
+					JOptionPane.showMessageDialog(null, "Select a record to update.");
+					return;
+				}
+				
+				ArrayList<String> lists = new ArrayList<>();
+				try(BufferedReader br = new BufferedReader(new FileReader("employee.txt"))){
+				 String line;  int rowInd = 0;
+				 
+				 if (rbMale.isSelected()) {
+					    gender = "Male";
+					} else if (rbFemale.isSelected()) {
+					    gender = "Female";
+					}
+				 
+				 while((line = br.readLine()) != null) {
+					if(rowInd == selectRow) {
+						update = employeeID.getText() + " - " +
+						         name.getText() + " - " +
+						         dBirth.getText() + " - " +
+						         age.getText() + " - " +
+						         CivilStatus.getSelectedItem().toString() + " - " +
+						         nationality.getText() + " - " +
+						         gender + " - " +
+						         cNumber.getText() + " - " +
+						         email.getText() + " - " +
+						         dep.getText() + " - " +
+						         jobT.getText();
+						lists.add(update);
+					} else {
+						lists.add(line);
+					}
+					rowInd++;
+				 }
+				}catch(IOException z) {
+					System.err.println(z);
+				}
+				
+				try (BufferedWriter bw = new BufferedWriter(new FileWriter("employee.txt"))) {
+					
+					for(String record : lists) bw.write(record + "\n");
+					} catch(IOException z) {
+						System.out.println(z);
+					}
+				
+				read();
+				JOptionPane.showMessageDialog(null, "Updated Successfully!");
+			
+				
+		 });
+		 
+		 delEmp.addActionListener(e ->{
+			int selectRow = table.getSelectedRow();
+			
+			if(selectRow == -1) {
+				JOptionPane.showMessageDialog(null, "Select a record to delete.");
+				return;
+			}
+			
+			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure to delete this record?",
+					"Confirm Delete", JOptionPane.YES_NO_OPTION);
+			if(confirm != JOptionPane.YES_OPTION) return;
+			
+			ArrayList<String> lists = new ArrayList<>();
+			try(BufferedReader br = new BufferedReader(new FileReader("employee.txt"))){
+			 String line;  int rowInd = 0;
+			 
+			 while((line = br.readLine()) != null) {
+				if(rowInd != selectRow) lists.add(line); 
+				rowInd++;
+			 }
+			}catch(IOException z) {
+				System.err.println(z);
+			}
+			
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter("employee.txt"))) {
+				
+				for(String record : lists) bw.write(record + "\n");
+				} catch(IOException z) {
+					System.out.println(z);
+				}
+			
+			read();
+			JOptionPane.showMessageDialog(null, "Deleted Successfully!");
+		
+		 });
+		  
 		 setTitle("EMPLOYEE MANAGEMENT SYSTEM");
 		 setLayout(null);
 		 setSize(800, 500);
