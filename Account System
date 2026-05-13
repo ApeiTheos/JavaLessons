@@ -165,3 +165,58 @@ public class LogInPage extends JFrame {
 
 }
 
+Register Page-----------------------------------------------------------------------------------------
+
+package javagui;
+import javax.swing.*;
+import java.util.*;
+import java.awt.*;
+import java.io.*;
+
+
+public class RegisterPage extends JFrame{
+	
+	static JTextField txtUN, txtFN;
+	static JPasswordField txtPass;
+	static JButton btnReg, btnCL, btnBack;
+    
+	RegisterPage(){
+		 
+		JLabel title = new JLabel("Register Page");
+		add(title).setBounds(140, 10, 100, 30);
+    	title.setFont(new Font("Arial", Font.BOLD, 12));
+	 
+		JLabel lUN = new JLabel("Username:");
+		add(lUN).setBounds(30, 50, 100, 25);
+		txtUN = new JTextField();
+		add(txtUN).setBounds(100, 50, 180, 25);
+		
+		JLabel lFN = new JLabel("Full Name:");
+		add(lFN).setBounds(30, 80, 100, 25);
+		txtFN = new JTextField();
+		add(txtFN).setBounds(100, 80, 180, 25);
+		
+		JPasswordField PSpass = new JPasswordField("Password:");
+		add(PSpass).setBounds(30, 110, 100, 25);
+		txtPass = new JPasswordField();
+		add(txtPass).setBounds(100, 110, 180, 25);
+		
+		
+		
+		
+		
+		
+		
+	 setTitle("Register Page");
+	 setLayout(null);
+	 setSize(400, 300);
+	 setDefaultCloseOperation(EXIT_ON_CLOSE);
+	 setVisible(true);
+	}
+	public static void main(String[] args) {
+	new RegisterPage();
+
+	}
+
+}
+
