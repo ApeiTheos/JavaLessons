@@ -1,0 +1,167 @@
+Main -------------------------------------------------------
+
+package accountSystemJava;
+
+public class Main {
+
+	public static void main(String[] args) {
+		new LogInPage();
+
+	}
+
+}
+
+
+User --------------------------------------------------------
+
+package accountSystemJava;
+
+public class User {
+    
+	private String username;
+	private String password;
+	private String fullname;
+	
+	public User(String username, String password, String fullname) {
+		this.username = username;
+		this.password = password;
+		this.fullname = fullname;	
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	public String getPassword() {
+		return password;
+	}public String getFullName() {
+		return fullname;
+	}
+	public static void main(String[] args) {
+
+	}
+
+}
+
+FileHandler -------------------------------------------------------------
+
+package accountSystemJava;
+import java.util.*;  
+import java.io.*;
+
+public class FileHandler {
+	
+	public static void saveUser(User user) {
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter("user.txt", true))) {
+		
+			bw.write(user.getUsername() + ", " + user.getPassword() + ", " + user.getFullName());
+			bw.newLine();
+			
+		}catch(IOException e) {
+			System.err.println(e);
+		}
+	}
+	
+	public static ArrayList<User>loadUsers(){
+		
+     ArrayList<User> users = new ArrayList<>();
+     try(BufferedReader br = new BufferedReader(new FileReader("user.txt"))){
+      String line;      
+       
+      while((line = br.readLine())!= null) {
+    	String[] data = line.split(", ");
+    	
+    	users.add(new User(
+    			data[0],
+    			data[1], 
+    			data[2]));
+    	
+      }
+     }catch(IOException e) {
+    	 System.err.println(e);
+     }
+     return users;
+
+	}
+
+}
+
+LogInPage --------------------------------------------------
+
+package accountSystemJava;
+
+import javax.swing.*;
+import java.util.*;
+import java.awt.*;
+import java.io.*;
+
+public class LogInPage extends JFrame {
+	
+     static JTextField txtusername, txtpassword;
+     static JButton btnLogin, btnReg, btnExit;
+	
+     LogInPage(){
+    	 
+    	 JLabel title = new JLabel("Login Page");
+    	 add(title).setBounds(130, 10, 100, 30);
+    	 title.setFont(new Font("Arial", Font.BOLD, 12));
+    	 
+    	 JLabel userN = new JLabel("Username:");
+    	 add(userN).setBounds(30, 40, 100, 25);
+    	 JTextField txtusername = new JTextField();
+    	 add(txtusername).setBounds(100, 45, 180, 20);
+    	 
+    	 JLabel passW = new JLabel("Password:");
+    	 add(passW).setBounds(30, 70, 100, 25);
+    	 JTextField txtpassword = new JTextField();
+    	 add(txtpassword).setBounds(100, 75, 180, 20);
+    	 
+    	 JButton btnLogin = new JButton("Login");
+    	 add(btnLogin).setBounds(30, 110, 90, 30);
+    	 
+    	 JButton btnReg = new JButton("Register");
+    	 add(btnReg).setBounds(130, 110, 90, 30);
+    	 
+    	 JButton btnExit = new JButton("Exit");
+    	 add(btnExit).setBounds(230, 110, 90, 30);
+     	 
+    	 btnLogin.addActionListener(e->{
+    	 String username = txtusername.getText();
+    	 String password = txtpassword.getText();
+    	 
+    	 ArrayList<User> users = FileHandler.loadUsers();
+    	 
+    	 for(User userLists : users) {
+    		if(userLists.getUsername().equals(username) && userLists.getPassword().equals(password)){
+    		
+    		JOptionPane.showMessageDialog(this, "Login Successfull");
+    		
+    		//new AccounntManagmentPage();
+    		dispose();
+    		
+    		return;
+    	 }
+    	 }
+    	 
+    	 JOptionPane.showMessageDialog(this, "Invalid. Please try again.");
+    	 });
+    	 
+    	 btnReg.addActionListener(e->{
+    		 //new RegisterPage();
+    		 dispose();
+    	 });
+    	 btnExit.addActionListener(e->{
+    		 System.exit(0);
+    	 });    	 
+    	 
+    	 setTitle("Login Page");
+    	 setSize(350, 250);
+    	 setLayout(null);
+    	 setDefaultCloseOperation(EXIT_ON_CLOSE);
+    	 setVisible(true);
+     }
+	public static void main(String[] args) {
+
+	}
+
+}
+
