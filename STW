@@ -1,0 +1,216 @@
+package javagui;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
+import java.util.*;
+import java.awt.event.*;
+import javax.swing.table.DefaultTableModel;
+
+public class SchoolCanteenWallet_Luyaga_2ndLab extends JFrame {
+     
+	 static JTextField txtname, txtdept, txtYL, txtWB, txtStatus;
+	 static JButton btnAdd, btnDel, btnUpd, btnCL;
+	 static DefaultTableModel model;
+	 
+	 
+	
+	 SchoolCanteenWallet_Luyaga_2ndLab(){
+     
+	 JLabel lbName = new JLabel("Full Name:");
+	 add(lbName).setBounds(20, 10, 90, 20);
+	 txtname = new JTextField();
+	 add(txtname).setBounds(20, 30, 220, 20);
+	 
+	 JLabel lbDept = new JLabel("Course/Department:");
+	 add(lbDept).setBounds(20, 60, 150, 20);
+	 txtdept = new JTextField();
+	 add(txtdept).setBounds(20, 80, 220, 20);
+	 
+	 JLabel lbYL = new JLabel("Year Level:");
+	 add(lbYL).setBounds(250, 10, 90, 20);
+	 txtYL = new JTextField();
+	 add(txtYL).setBounds(250, 30, 220, 20);
+	 
+	 JLabel lbWB = new JLabel("Wallet Balance:");
+	 add(lbWB).setBounds(250, 60, 150, 20);
+	 txtWB = new JTextField();
+	 add(txtWB).setBounds(250, 80, 220, 20);
+	 
+	 JLabel lbStatus = new JLabel("Status(Active/Suspended):");
+	 add(lbStatus).setBounds(480, 10, 160, 20);
+	 txtStatus = new JTextField();
+	 add(txtStatus).setBounds(480, 30, 180, 20);
+	 
+	 btnAdd = new JButton("Add");
+	 add(btnAdd).setBounds(480, 50, 85, 25);
+	 btnDel = new JButton("Delete");
+	 add(btnDel).setBounds(480, 75, 85, 25);
+	 btnUpd = new JButton("Update");
+	 add(btnUpd).setBounds(575, 50, 85, 25);
+	 btnCL = new JButton("Clear");
+	 add(btnCL).setBounds(575, 75, 85, 25);
+	 
+	 String columns[] = {"Full Name", "Course/Dept", "Year Level", "Wallet Balance", "Status"};
+	 model = new DefaultTableModel(columns, 0);
+	 JTable table = new JTable(model);
+	 JScrollPane scPane = new JScrollPane(table);
+	 add(scPane).setBounds(20, 110, 645, 340);
+	 
+	 table.getTableHeader().setBackground(new Color(173, 216, 230)); 
+	 table.getTableHeader().setForeground(Color.BLACK);
+	 
+	 read();
+	 
+	   table.addMouseListener(new MouseAdapter() {	
+		public void mouseClicked(MouseEvent ev) {
+			 int row = table.getSelectedRow();
+			 if(row != -1) {
+				 txtname.setText(model.getValueAt(row, 0).toString()); 
+				 txtdept.setText(model.getValueAt(row, 1).toString()); 
+				 txtYL.setText(model.getValueAt(row, 2).toString()); 
+				 txtWB.setText(model.getValueAt(row, 3).toString()); 
+				 txtStatus.setText(model.getValueAt(row, 4).toString()); 
+			 }
+			}		
+	});
+	
+	btnAdd.addActionListener(e->{
+		
+		    String name = txtname.getText();
+		    String dept = txtdept.getText();
+		    String yearLvl = txtYL.getText();
+		    String walletB = txtWB.getText();
+		    String stats = txtStatus.getText();
+		  
+		    
+		 try {
+				FileWriter fw = new FileWriter("scwInfo.txt", true);
+				
+				fw.write(name + " - " + dept + " - " +  yearLvl + " - " + walletB + " - " + 
+				stats + "\n"); 
+				fw.close();
+				
+				read();
+				JOptionPane.showMessageDialog(null, "Employee Added Successfully!"); 
+				
+		 } catch (IOException e1) {
+			 System.out.println("System Error: " + e1.getMessage());
+		 }
+	});
+	
+	  btnUpd.addActionListener(e ->{
+		 int selectRow = table.getSelectedRow();
+			
+			if(selectRow == -1) {
+				JOptionPane.showMessageDialog(null, "Select a record to update.");
+				return;
+			}
+			
+			ArrayList<String> lists = new ArrayList<>();
+			try(BufferedReader br = new BufferedReader(new FileReader("scwInfo.txt"))){
+			 String line;  int rowInd = 0;
+			 
+			 while((line = br.readLine()) != null) {
+				if(rowInd == selectRow) {
+					String update = txtname.getText() + " - " +
+					         txtdept.getText() + " - " +
+					         txtYL.getText() + " - " +
+					         txtWB.getText() + " - " +
+					         txtStatus.getText();
+					        
+					lists.add(update);
+				} else {
+					lists.add(line);
+				}
+				rowInd++;
+			 }
+			}catch(IOException z) {
+				System.err.println(z);
+			}
+			
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter("scwInfo.txt"))) {
+				
+				for(String record : lists) bw.write(record + "\n");
+				} catch(IOException z) {
+					System.out.println(z);
+				}
+			
+			read();
+			JOptionPane.showMessageDialog(null, "Updated Successfully!");
+					
+	 });
+	  
+	  btnDel.addActionListener(e ->{
+			int selectRow = table.getSelectedRow();
+			
+			if(selectRow == -1) {
+				JOptionPane.showMessageDialog(null, "Select a record to delete.");
+				return;
+			}
+			
+			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure to delete this record?",
+					"Confirm Delete", JOptionPane.YES_NO_OPTION);
+			if(confirm != JOptionPane.YES_OPTION) return;
+			
+			ArrayList<String> lists = new ArrayList<>();
+			try(BufferedReader br = new BufferedReader(new FileReader("scwInfo.txt"))){
+			 String line;  int rowInd = 0;
+			 
+			 while((line = br.readLine()) != null) {
+				if(rowInd != selectRow) lists.add(line); 
+				rowInd++;
+			 }
+			}catch(IOException z) {
+				System.err.println(z);
+			}
+			
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter("scwInfo.txt"))) {
+				
+				for(String record : lists) bw.write(record + "\n");
+				} catch(IOException z) {
+					System.out.println(z);
+				}
+			
+			read();
+			JOptionPane.showMessageDialog(null, "Deleted Successfully!");
+		
+		 });
+	  
+	  btnCL.addActionListener(e->{
+		 txtname.setText(""); 
+		 txtdept.setText(""); 
+		 txtYL.setText(""); 
+		 txtWB.setText(""); 
+		 txtStatus.setText(""); 
+	  });
+
+     setTitle("Student Canteen Wallet");
+     setLayout(null);
+     setSize(700, 500);
+     setDefaultCloseOperation(EXIT_ON_CLOSE);
+     setVisible(true);
+     setLocationRelativeTo(null);
+	 }
+	
+	 public static void read() {
+			model.setRowCount(0);
+			
+			try (BufferedReader br = new BufferedReader(new FileReader("scwInfo.txt"))) {
+			String line;
+			
+			while((line = br.readLine()) != null) {
+				String row[] = line.split(" - ");
+				model.addRow(row);
+			}
+			} catch(IOException e) {
+				System.out.println("System Error: " + e.getMessage());
+			}
+		}
+	 
+	public static void main(String[] args) {
+	new  SchoolCanteenWallet_Luyaga_2ndLab();
+
+	}
+
+}
