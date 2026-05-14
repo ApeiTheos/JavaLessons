@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 public class SchoolCanteenWallet_Luyaga_2ndLab extends JFrame {
      
 	 static JTextField txtname, txtdept, txtYL, txtWB, txtStatus;
+	 static String name, dept, yearLvl, walletB, stats;
 	 static JButton btnAdd, btnDel, btnUpd, btnCL;
 	 static DefaultTableModel model;
 	 
@@ -77,13 +78,41 @@ public class SchoolCanteenWallet_Luyaga_2ndLab extends JFrame {
 	
 	btnAdd.addActionListener(e->{
 		
-		    String name = txtname.getText();
-		    String dept = txtdept.getText();
-		    String yearLvl = txtYL.getText();
-		    String walletB = txtWB.getText();
-		    String stats = txtStatus.getText();
-		  
+		    name = txtname.getText();
+		    dept = txtdept.getText();
+		    yearLvl = txtYL.getText();
+		    walletB = txtWB.getText();
+		    stats = txtStatus.getText();
 		    
+		    if(name.isEmpty()) {
+		    	JOptionPane.showMessageDialog(this, "Invalid, Full Name cannot be empty.");
+		    	return;
+		    }
+		    
+		    
+		    else if(dept.isEmpty()) {
+		    	JOptionPane.showMessageDialog(this, "Invalid, Course/Department cannot be empty.");
+		    	return;
+		    }
+		    
+		    else if(!yearLvl.matches("^\\d+")) {
+		    	JOptionPane.showMessageDialog(this, "Invalid, Year Level must be numeric.");
+		    	return;
+		    } 
+		    
+		    else if(!stats.equalsIgnoreCase("Active") && !stats.equalsIgnoreCase("Suspended") ){
+		    	JOptionPane.showMessageDialog(this, "Invalid, Status only accept Active or Suspended.");
+		    	return;
+		    }
+		    
+		    try {
+		    	Double.parseDouble(walletB);	    		
+		    } catch(NumberFormatException z) {
+		    	JOptionPane.showMessageDialog(this, "Wallet must be numerical/decimal");
+		    	return;
+		    }
+		   
+		   
 		 try {
 				FileWriter fw = new FileWriter("scwInfo.txt", true);
 				
@@ -192,6 +221,7 @@ public class SchoolCanteenWallet_Luyaga_2ndLab extends JFrame {
      setVisible(true);
      setLocationRelativeTo(null);
 	 }
+	 
 	
 	 public static void read() {
 			model.setRowCount(0);
